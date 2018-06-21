@@ -1,0 +1,13 @@
+{
+  "name": "inaba",
+  "version": "1.0.0",
+  "description": "A Single Input Multiple Output operator.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Innpaul Zhang <zyp108421@gmail.com>",
+  "repository": "https://github.com/zhyupe/port-mapper",
+  "bugs": "https://github.com/zhyupe/port-mapper/issues",
+  "license": "GPL-2.0"
+}
