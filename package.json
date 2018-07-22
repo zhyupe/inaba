@@ -1,13 +1,24 @@
 {
   "name": "inaba",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A Single Input Multiple Output operator.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Innpaul Zhang <zyp108421@gmail.com>",
-  "repository": "https://github.com/zhyupe/port-mapper",
-  "bugs": "https://github.com/zhyupe/port-mapper/issues",
-  "license": "GPL-2.0"
+  "repository": "https://github.com/zhyupe/inaba",
+  "bugs": "https://github.com/zhyupe/inaba/issues",
+  "license": "GPL-2.0",
+  "dependencies": {
+    "log4js": "^2.9.0",
+    "proxy-addr": "^2.0.3"
+  },
+  "devDependencies": {
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0"
+  }
 }
