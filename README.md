@@ -19,4 +19,4 @@ Inaba can use built-in authenticators (located at `lib/authenticators`) or authe
 For now, there is only a simple key-based authenticator (`secret`), but you can build your own base on that.
 
 ## License
-
+[GNU General Public License v2.0](LICENSE)
