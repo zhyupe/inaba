@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+  <title>Inaba - Operator</title>
+  <style>
+    html { 
+      margin: 0;
+      height: 100%;
+    }
+    body {
+      margin: 0;
+      min-height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    div {
+      text-align: center;
+      color: #747b87;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      font-size: 22px;
+      letter-spacing: 2px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    It's too difficult to decide using Vue or jQuery.<br>
+    So I decided to use neither.<br><br>
+    Plz press <kbd>F12</kbd> or use another way to open your console.<br>
+    Let's meet there.
+  </div>
+  <script>
+    (function () {
+      console.log('Hello, welcome to Inaba. Initiating ...\nIf you see errors below, please use latest version of Chrome or Firefox')
+      if (typeof fetch !== 'function') {
+        console.error('Sorry, this page requires fetch API, but your browser does not support.')
+        return
+      }
+
+      // http://127.0.0.1:4022/api/auth
+      const param = function (a, parent) {
+        var s = []
+        var k, v
+
+        for (k in a) {
+          var key = encodeURIComponent(k)
+          if (parent) {
+            key = parent + '[' + key + ']'
+          }
+
+          if (a[k] && typeof a[k] === 'object') {
+            s = s.concat(param(a[k], key))
+          } else {
+            v = a[k]
+            v = encodeURIComponent(typeof v === 'function' ? v() : v)
+            s.push(key + '=' + v)
+          }
+        }
+
+        return s.join('&')
+      }
+
+      const api = function (endpoint, params) {
+        let uri = '/api/' + endpoint
+        if (params) {
+          uri += '?' + param(params)
+        }
+        return fetch(uri).then(res => {
+          if (res.ok) {
+            return res.json()
+          } else {
+            return res.text().then(text => Promise.reject(new Error(text)))
+          }
+        }).catch(err => {
+          console.error(err.message)
+        })
+      }
+
+      let store = {}
+      const refresh = () => Promise.all([api('status'), api('auth')]).then(([status, auth]) => {
+        store = { status, auth }
+      })
+
+      const inaba = {
+        get status () {
+          if (store.status.backends) {
+            return `Your IP: ${store.status.ip}
+Current backends: ${store.status.current}
+Authorized backends: ${store.status.backends}
+Session expire: ${new Date(store.status.expire).toISOString()}
+
+Use 'inaba.select(backend)' to select backend.`
+          } else {
+            return `Your IP: ${store.status.ip}, unauthorized.`
+          }
+        },
+        get methods () {
+          let ret = 'Available authorization methods:'
+          for (let key of Object.keys(store.auth)) {
+            let item = store.auth[key]
+            ret += `
+
+${item.name}: ${item.description}
+  inaba.auth('${key}'${item.field.map(k => `, ${k}`).join('')})`
+          }
+          return ret
+        },
+        auth (method, ...args) {
+          let item = store.auth[method]
+          if (!item) {
+            console.error(`Method ${method} is not exist.`)
+            return
+          }
+
+          if (args.length !== item.field.length) {
+            console.error(`${method} requires ${item.field.length} arguments, ${args.length} provided.`)
+            return
+          }
+
+          let params = {}
+
+          for (let i = 0; i < args.length; ++i) {
+            params[item.field[i]] = args[i]
+          }
+
+          api(`auth/${method}`, params).then(status => {
+            store.status = status
+            console.log(inaba.status)
+          })
+        },
+        select (backend) {
+          api('select', { backend }).then(status => {
+            store.status = status
+            console.log(`Backend '${backend}' selected!`)
+          })
+        },
+        refresh () {
+          refresh()
+        }
+      }
+
+      refresh().then(() => {
+        window.inaba = inaba
+        console.log(inaba.status)
+      })
+    })()
+  </script>
+</body>
+</html>
