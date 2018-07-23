@@ -5,8 +5,11 @@ Inaba is a socket operator, designed for exposing multiple services with just on
 ## How-to
 Create your own `config.json` from `config.example.json`, and start it with `screen` or `pm2` or whatever.
 
-Users can visit the `web_port` to choose the backend they want to connect, then connections from will be 
-directed to the backend they choosed.
+Users can visit the `web_port` to choose the backend they want to connect, then the connections to the 
+`proxy_port` will be directed to the backend they choosed.
+
+By default, the web server is configured to trust proxies from `loopback` so it can detect user's ip address
+behind a reverse proxy. You can disable this feature by setting `trust_proxy` to `null`.
 
 For now, there is only a cli-based interface for users to authenticate and choose backend. A gui-based one 
 may be introduced in weeks (or never). So if you are willing to provide help, please open an issue to let me
