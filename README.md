@@ -11,10 +11,6 @@ Users can visit the `web_port` to choose the backend they want to connect, then 
 By default, the web server is configured to trust proxies from `loopback` so it can detect user's ip address
 behind a reverse proxy. You can disable this feature by setting `trust_proxy` to `null`.
 
-For now, there is only a cli-based interface for users to authenticate and choose backend. A gui-based one 
-may be introduced in weeks (or never). So if you are willing to provide help, please open an issue to let me
-know. PRs are welcomed.
-
 ## Authenticators
 Inaba can use built-in authenticators (located at `lib/authenticators`) or authenticators published on `npm` 
 (packages named `inaba-auth-{xxx}`)

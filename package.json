@@ -1,6 +1,6 @@
 {
   "name": "inaba",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A Single Input Multiple Output operator.",
   "main": "index.js",
   "scripts": {

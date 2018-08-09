@@ -2,150 +2,30 @@
 <html>
 <head>
   <title>Inaba - Operator</title>
-  <style>
-    html { 
-      margin: 0;
-      height: 100%;
-    }
-    body {
-      margin: 0;
-      min-height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    div {
-      text-align: center;
-      color: #747b87;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      font-size: 22px;
-      letter-spacing: 2px;
-      line-height: 1.5;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="./src/index.css">
 </head>
 <body>
-  <div>
-    It's too difficult to decide using Vue or jQuery.<br>
-    So I decided to use neither.<br><br>
-    Plz press <kbd>F12</kbd> or use another way to open your console.<br>
-    Let's meet there.
+  <h2>inaba</h2>
+  <div class="container">
+    <div class="card">
+      <h3 id="D_user">-</h3>
+    </div>
+    <!-- <p id="D_status" class="status">Current backend: -</h3> -->
+    <ul id="D_backends" class="backend-list card"></ul>
+    <ul id="D_methods" class="method-list card"></ul>
+    <ul id="D_authentication" class="authentication card" style="display: none"></ul>
   </div>
-  <script>
-    (function () {
-      console.log('Hello, welcome to Inaba. Initiating ...\nIf you see errors below, please use latest version of Chrome or Firefox')
-      if (typeof fetch !== 'function') {
-        console.error('Sorry, this page requires fetch API, but your browser does not support.')
-        return
-      }
-
-      // http://127.0.0.1:4022/api/auth
-      const param = function (a, parent) {
-        var s = []
-        var k, v
-
-        for (k in a) {
-          var key = encodeURIComponent(k)
-          if (parent) {
-            key = parent + '[' + key + ']'
-          }
-
-          if (a[k] && typeof a[k] === 'object') {
-            s = s.concat(param(a[k], key))
-          } else {
-            v = a[k]
-            v = encodeURIComponent(typeof v === 'function' ? v() : v)
-            s.push(key + '=' + v)
-          }
-        }
-
-        return s.join('&')
-      }
-
-      const api = function (endpoint, params) {
-        let uri = '/api/' + endpoint
-        if (params) {
-          uri += '?' + param(params)
-        }
-        return fetch(uri).then(res => {
-          if (res.ok) {
-            return res.json()
-          } else {
-            return res.text().then(text => Promise.reject(new Error(text)))
-          }
-        }).catch(err => {
-          console.error(err.message)
-        })
-      }
-
-      let store = {}
-      const refresh = () => Promise.all([api('status'), api('auth')]).then(([status, auth]) => {
-        store = { status, auth }
-      })
-
-      const inaba = {
-        get status () {
-          if (store.status.backends) {
-            return `Your IP: ${store.status.ip}
-Current backends: ${store.status.current}
-Authorized backends: ${store.status.backends}
-Session expire: ${new Date(store.status.expire).toISOString()}
-
-Use 'inaba.select(backend)' to select backend.`
-          } else {
-            return `Your IP: ${store.status.ip}, unauthorized.`
-          }
-        },
-        get methods () {
-          let ret = 'Available authorization methods:'
-          for (let key of Object.keys(store.auth)) {
-            let item = store.auth[key]
-            ret += `
-
-${item.name}: ${item.description}
-  inaba.auth('${key}'${item.field.map(k => `, ${k}`).join('')})`
-          }
-          return ret
-        },
-        auth (method, ...args) {
-          let item = store.auth[method]
-          if (!item) {
-            console.error(`Method ${method} is not exist.`)
-            return
-          }
-
-          if (args.length !== item.field.length) {
-            console.error(`${method} requires ${item.field.length} arguments, ${args.length} provided.`)
-            return
-          }
-
-          let params = {}
-
-          for (let i = 0; i < args.length; ++i) {
-            params[item.field[i]] = args[i]
-          }
-
-          api(`auth/${method}`, params).then(status => {
-            store.status = status
-            console.log(inaba.status)
-          })
-        },
-        select (backend) {
-          api('select', { backend }).then(status => {
-            store.status = status
-            console.log(`Backend '${backend}' selected!`)
-          })
-        },
-        refresh () {
-          refresh()
-        }
-      }
-
-      refresh().then(() => {
-        window.inaba = inaba
-        console.log(inaba.status)
-      })
-    })()
-  </script>
+  <div class="buttons">
+    <div id="D_refresh" class="refresh">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 65">
+        <path fill="#fbc8d4" d="M43.227 51.746c-3.179 1.786-6.826 2.827-10.726 2.827-12.171 0-22.073-9.902-22.073-22.073 0-2.739.524-5.35 1.439-7.771l-4.731-2.851A27.34 27.34 0 0 0 5 32.5C5 47.664 17.336 60 32.5 60c5.406 0 10.434-1.584 14.691-4.289l5.758 5.759V45.358H36.838l6.389 6.388z"/>
+        <path fill="#9795f0" d="M32.5 4.999a27.31 27.31 0 0 0-14.699 4.282l-5.75-5.75v16.11h16.11l-6.395-6.395a21.834 21.834 0 0 1 10.734-2.82c12.171 0 22.073 9.902 22.073 22.074 0 2.899-.577 5.664-1.599 8.202l4.738 2.762A27.299 27.299 0 0 0 60 32.5C60 17.336 47.663 4.999 32.5 4.999z"/>
+      </svg>
+    </div>
+    <div id="D_back" class="text-button" style="display: none">&lt;</div>
+    <div id="D_go" class="text-button" style="display: none">&gt;</div>
+  </div>
+  <script src="./src/index.js"></script>
 </body>
 </html>
