@@ -134,6 +134,8 @@
     })
   }
 
+  const stopPropagation = e => e.stopPropagation()
+
   let store = {}
   let $buttons = {
     go: $id('D_go'),
@@ -258,9 +260,19 @@
         }
       })
       if (hasHistory) {
-        input.addEventListener('focus', () => $show($id(`${id}_history`)))
-        input.addEventListener('blur', () => setTimeout(() => $hide($id(`${id}_history`)), 10))
+        input.addEventListener('focus', () => {
+          showHistory(id)
+        })
       }
+      let inputWrapper = $el({
+        tagName: 'div',
+        className: 'input',
+        childs: [
+          input,
+          hasHistory && renderHistory(field)
+        ]
+      })
+      inputWrapper.addEventListener('click', stopPropagation)
       $auth.appendChild($el({
         tagName: 'li',
         className: 'item',
@@ -272,17 +284,24 @@
               for: `D_auth_${field}`
             }
           }),
-          $el({
-            tagName: 'div',
-            className: 'input',
-            childs: [
-              input,
-              hasHistory && renderHistory(field)
-            ]
-          })
+          inputWrapper
         ]
       }))
     }
+  }
+
+  let activeHistory = null
+  const hideHistory = () => {
+    if (activeHistory !== null) {
+      $hide(activeHistory)
+      activeHistory = null
+    }
+  }
+
+  const showHistory = (id) => {
+    hideHistory()
+    activeHistory = $id(`${id}_history`)
+    $show(activeHistory)
   }
 
   const renderHistory = field => $el({
@@ -297,10 +316,10 @@
         tagName: 'li',
         text: history
       })
-      item.addEventListener('click', () => {
+      item.addEventListener('click', (e) => {
         let el = $id(`D_auth_${field}`)
         el.value = history
-        $buttons.go.focus()
+        hideHistory()
       })
       return item
     })
@@ -333,6 +352,7 @@
     })
   }
 
+  document.body.addEventListener('click', hideHistory)
   $buttons.refresh.addEventListener('click', refresh)
   $buttons.back.addEventListener('click', renderMain)
   $buttons.go.addEventListener('click', () => {
