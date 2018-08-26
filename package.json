@@ -11,7 +11,7 @@
   "bugs": "https://github.com/zhyupe/inaba/issues",
   "license": "GPL-2.0",
   "dependencies": {
-    "ip": "^1.1.5",
+    "ipaddr.js": "^1.8.1",
     "log4js": "^3.0.2",
     "proxy-addr": "^2.0.3"
   },
