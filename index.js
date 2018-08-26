@@ -4,7 +4,7 @@ const config = require('./config.json')
 helper.setLogLevel(config.log_level)
 
 const AuthManager = require('./lib/AuthenticationManager')
-const authManager = new AuthManager(config.authentication)
+const authManager = new AuthManager(config.timeout, config.authentication)
 
 const WebServer = require('./lib/WebServer')
 const ProxyServer = require('./lib/ProxyServer')
