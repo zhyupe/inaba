@@ -11,16 +11,16 @@
   "bugs": "https://github.com/zhyupe/inaba/issues",
   "license": "GPL-2.0",
   "dependencies": {
-    "ipaddr.js": "^1.8.1",
-    "log4js": "^3.0.2",
-    "proxy-addr": "^2.0.3"
+    "ipaddr.js": "^1.9.1",
+    "log4js": "^5.3.0",
+    "proxy-addr": "^2.0.5"
   },
   "devDependencies": {
-    "eslint": "^5.3.0",
+    "eslint": "^5.16.0",
     "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-node": "^7.0.1",
-    "eslint-plugin-promise": "^4.0.0",
+    "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^3.1.0"
   }
 }
